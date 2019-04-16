@@ -24,14 +24,11 @@
     - {s: "node-{{ inventory_hostname }}.pem", d: "cert.crt"}
     - {s: "node-{{ inventory_hostname }}-key.pem", d: "key.pem"}
 
-- name: Calico | Install calicoctl container script
-  template:
-    src: calicoctl-container.j2
-    dest: "{{ bin_dir }}/calicoctl"
+- name: Calico | Download calicoctl
+  get_url:
+    url: https://github.com/projectcalico/calicoctl/releases/download/{{ calico_ctl_version }}/calicoctl-linux-{{ host_architecture }}
+    dest: /usr/local/bin/calicoctl
     mode: 0755
-    owner: root
-    group: root
-  changed_when: false
 
 - name: Calico | wait for etcd
   uri:
